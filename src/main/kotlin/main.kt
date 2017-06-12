@@ -2,38 +2,40 @@ import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 
 fun main(args: Array<String>) {
+    println("current thread: ${Thread.currentThread().name}")
     println("Start")
-    val result = postItem("greeting")
-    println("Do something 1")
-    Thread.sleep(5000)
+    val result = generateString("greeting")
     println("result: $result")
+    println("Do something...")
+    Thread.sleep(5000)
     println("End")
 }
 
-fun postItem(item: String): String? {
+fun generateString(item: String): String? {
+    println("1. thread of generateString: ${Thread.currentThread().name}")
     var res: String? = null
     launch(CommonPool) {
-        val token = preparePost()
-        val post = submitPost(token, item)
-        res = processPost(post)
-
+        println("(inside launch) thread generateString: ${Thread.currentThread().name}")
+        val result = timeConsumingJob()
+        res = anotherJob(result)
     }
+    println("2. thread of generateString : ${Thread.currentThread().name}")
     return res
 }
 
-fun processPost(post: String): String {
-    return "processing the post: $post"
+fun anotherJob(post: String): String {
+    println("thread of anotherJob: ${Thread.currentThread().name}")
+    Thread.sleep(100)
+    val result = post.toUpperCase()
+    println("result of anotherJob is ready: $result")
+    return result
 }
 
-fun submitPost(token: String, item: String): String {
-    println("Start submitting the post")
-    Thread.sleep(800)
-    return "submitting the post: token: $token, item: $item"
-}
 
-
-suspend fun preparePost(): String {
-    println("Start preparing the post")
+suspend fun timeConsumingJob(): String {
+    println("thread timeConsumingJob: ${Thread.currentThread().name}")
+    println("Start timeConsumingJob")
     Thread.sleep(800)
-    return "post is ready"
+    println("result of timeConsumingJob is ready")
+    return "abcdef - sought string"
 }
