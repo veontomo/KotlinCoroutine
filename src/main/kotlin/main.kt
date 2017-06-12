@@ -1,10 +1,13 @@
-import com.sun.deploy.trace.TraceLevel.UI
 import kotlinx.coroutines.experimental.CommonPool
 import kotlinx.coroutines.experimental.launch
 
 fun main(args: Array<String>) {
-    postItem("start")
-    Thread.sleep(1000)
+    println("Start")
+    postItem("greeting")
+    println("Do something 1")
+    Thread.sleep(5000)
+
+    println("End")
 }
 
 fun postItem(item: String) {
@@ -21,11 +24,14 @@ fun processPost(post: String) {
 }
 
 fun submitPost(token: String, item: String): String {
+    println("Start submitting the post")
+    Thread.sleep(800)
     return "submitting the post: token: $token, item: $item"
 }
 
 
 suspend fun preparePost(): String {
-    (1..5).forEach { it -> println("iteration in post preparation: $it") }
+    println("Start preparing the post")
+    Thread.sleep(800)
     return "post is ready"
 }
