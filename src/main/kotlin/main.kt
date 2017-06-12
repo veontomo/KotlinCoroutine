@@ -3,24 +3,26 @@ import kotlinx.coroutines.experimental.launch
 
 fun main(args: Array<String>) {
     println("Start")
-    postItem("greeting")
+    val result = postItem("greeting")
     println("Do something 1")
     Thread.sleep(5000)
-
+    println("result: $result")
     println("End")
 }
 
-fun postItem(item: String) {
+fun postItem(item: String): String? {
+    var res: String? = null
     launch(CommonPool) {
         val token = preparePost()
         val post = submitPost(token, item)
-        processPost(post)
+        res = processPost(post)
 
     }
+    return res
 }
 
-fun processPost(post: String) {
-    println("processing the post: $post")
+fun processPost(post: String): String {
+    return "processing the post: $post"
 }
 
 fun submitPost(token: String, item: String): String {
